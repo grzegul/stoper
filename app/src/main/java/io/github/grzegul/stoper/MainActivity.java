@@ -8,14 +8,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@TargetApi(Build.VERSION_CODES.GINGERBREAD)
-@SuppressLint("NewApi")
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,10 +35,23 @@ public class MainActivity extends AppCompatActivity {
         btnStart = (Button) findViewById(R.id.btnStart);
         btnStop = (Button) findViewById(R.id.btnStop);
         textViewTime = (TextView) findViewById(R.id.textViewTime);
-        textViewTime.setText("00:03:00");
+        EditText editTextTime = (EditText) findViewById(R.id.editTextTime);
+        textViewTime.setText("00:00:00");
 
-        final CounterClass timer = new CounterClass(180000, 1000);
 
+        String s =  editTextTime.getText().toString();
+        DateFormat formatter = new SimpleDateFormat("hh:mm:ss a");
+        try {
+            Date date = formatter.parse(s);
+            textViewTime.setText((CharSequence) date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        int milisekundy = 5000;
+        int interwal = 1000;
+        final CounterClass timer = new CounterClass(milisekundy, interwal);
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,15 +67,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    @SuppressLint("NewApi")
+
     public class CounterClass extends CountDownTimer{
         public CounterClass(long millisInFuture, long countDownInterval){
                 super(millisInFuture, countDownInterval);
 
         }
-        @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-        @SuppressLint("NewApi")
+
 
         @Override
         public void onTick(long millisUntilFinished){
