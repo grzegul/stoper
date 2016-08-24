@@ -7,13 +7,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="io.github.grzegul.stoper.MainActivity">
+    tools:context="io.github.grzegul.stoper.MainActivity"
+    android:clickable="true"
+    android:focusableInTouchMode="true" >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Time"
+        android:text="hh:mm:ss"
         android:id="@+id/textViewTime"
         android:layout_marginBottom="106dp"
         android:layout_alignParentBottom="true"
@@ -27,6 +29,7 @@
         android:layout_marginStart="30dp"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,22 +40,27 @@
         android:layout_alignParentEnd="true" />
 
     <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:text=""
+        android:selectAllOnFocus="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/editTextTime" />
+
+    <EditText
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:inputType="time"
         android:ems="10"
+        android:text="00:01:00"
         android:id="@+id/editTextTime"
+        android:imeOptions="actionDone"
+        android:selectAllOnFocus="true"
         android:layout_marginTop="51dp"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/btnStart" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="OK"
-        android:id="@+id/btnOK"
-        android:layout_alignBottom="@+id/editTextTime"
-        android:layout_alignStart="@+id/btnStop" />
 
 
 </RelativeLayout>
