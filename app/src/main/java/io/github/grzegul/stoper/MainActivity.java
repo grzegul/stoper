@@ -1,14 +1,10 @@
 package io.github.grzegul.stoper;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -16,13 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -32,29 +22,29 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStart, btnStop;
     private TextView textViewTime;
     private EditText editTextTime;
-    private int godziny = 60*60*1000;
-    private int minuty = 60*1000;
-    private int sekundy = 1000;
-    private int interwal = 1000;
+    private int godziny = 0;
+    private int minuty = 1;
+    private int sekundy = 0;
+    private int interwal = 1;
     private CounterClass timer;
 
     public int getGodziny() {
-        return godziny/(60*60*1000);
+        return godziny;
     }
     public void setGodziny(int godziny) {
-        this.godziny = godziny*60*60*1000;
+        this.godziny = godziny;
     }
     public int getMinuty() {
-        return minuty/(60*1000);
+        return minuty;
     }
     public void setMinuty(int minuty) {
-        this.minuty = minuty*60*1000;
+        this.minuty = minuty;
     }
     public int getSekundy() {
-        return sekundy/1000;
+        return sekundy;
     }
     public void setSekundy(int sekundy) {
-        this.sekundy = sekundy*1000;
+        this.sekundy = sekundy;
     }
     public int getInterwal() {
         return interwal;
@@ -62,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
     public void setInterwal(int interwal) {
         this.interwal = interwal;
     }
-    public void dataRead(EditText editTextTime){
+    //czytanie okna tekstowego i wpisywanie danych na wyjście
+    public void dataReadWrite(EditText editTextTime){
         String s =  editTextTime.getText().toString();
         if((s.contains(":")) && ((s.split(":")).length>3)){
             setSekundy(0);
@@ -82,7 +73,13 @@ public class MainActivity extends AppCompatActivity {
             setMinuty(Integer.valueOf(s));
             setGodziny(0);
         }
-    }   //czytanie okna tekstowego
+        String data = String.format("%02d:%02d:%02d", getGodziny(), getMinuty(), getSekundy());
+        textViewTime.setText(data);
+        editTextTime.setText(data);
+        editTextTime.clearFocus();
+        btnStart.setEnabled(true);
+        btnStop.setEnabled(true);
+    }
     
 
     @Override
@@ -94,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         btnStop = (Button) findViewById(R.id.btnStop);
         textViewTime = (TextView) findViewById(R.id.textViewTime);
         editTextTime = (EditText) findViewById(R.id.editTextTime);
+        editTextTime.setText(String.format("%02d:%02d:%02d", getGodziny(), getMinuty(), getSekundy()));
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.alarm_short);
 
 
@@ -102,32 +100,37 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    dataRead(editTextTime); //moja metoda
-                    textViewTime.setText(getGodziny()+":"+getMinuty()+":"+getSekundy());
-                    editTextTime.setText(getGodziny()+":"+getMinuty()+":"+getSekundy());
+                    dataReadWrite(editTextTime); //moja metoda
                     handled = false;
                 }
                 return handled;
             }
         });
-        //TEN LISTENER ZDAJE SIĘ ANULOWAĆ PRZYCISK STOP
         editTextTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (v == editTextTime) {
-                    if (!hasFocus) {
+                    if(hasFocus){
+                        btnStart.setEnabled(false);
+                        btnStop.setEnabled(false);
+                        editTextTime.selectAll();
+                    } else if (!hasFocus) {
                         // Close keyboard
-                        ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
-                                .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                        ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                        dataReadWrite(editTextTime); //moja metoda
+
                     }
                 }
+
             }
         });
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timer = new CounterClass(getGodziny()*60*60*1000+getMinuty()*60*1000+getSekundy()*1000, getInterwal());
+                timer = new CounterClass(getGodziny()*60*60*1000+getMinuty()*60*1000+getSekundy()*1000, getInterwal()*1000);
                 timer.start();
+                btnStart.setEnabled(false);
+                editTextTime.setEnabled(false);
 //                mp.start();
             }
         });
@@ -135,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 timer.cancel();
+                btnStart.setEnabled(true);
+                editTextTime.setEnabled(true);
 //                mp.start();
             }
         });
@@ -152,8 +157,6 @@ public class MainActivity extends AppCompatActivity {
             String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
                     TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
                     TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-//            Log.d("debuggowanie", hms);
- //           System.out.println(hms);
             textViewTime.setText(hms);
         }
 
