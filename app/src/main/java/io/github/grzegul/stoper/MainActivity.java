@@ -3,6 +3,7 @@ package io.github.grzegul.stoper;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         btnStop = (Button) findViewById(R.id.btnStop);
         textViewTime = (TextView) findViewById(R.id.textViewTime);
         editTextTime = (EditText) findViewById(R.id.editTextTime);
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.alarm_short);
+
 
         editTextTime.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -101,13 +104,14 @@ public class MainActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     dataRead(editTextTime); //moja metoda
                     textViewTime.setText(getGodziny()+":"+getMinuty()+":"+getSekundy());
+                    editTextTime.setText(getGodziny()+":"+getMinuty()+":"+getSekundy());
                     handled = false;
                 }
                 return handled;
             }
         });
         //TEN LISTENER ZDAJE SIĘ ANULOWAĆ PRZYCISK STOP
-        /*editTextTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editTextTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (v == editTextTime) {
@@ -118,18 +122,20 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-        });*/
+        });
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 timer = new CounterClass(getGodziny()*60*60*1000+getMinuty()*60*1000+getSekundy()*1000, getInterwal());
                 timer.start();
+//                mp.start();
             }
         });
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 timer.cancel();
+//                mp.start();
             }
         });
     }
@@ -154,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onFinish(){
             textViewTime.setText("Done");
+            final MediaPlayer mp2 = MediaPlayer.create(getBaseContext(), R.raw.alarm_short);
+            mp2.start();
         }
     }
 }
