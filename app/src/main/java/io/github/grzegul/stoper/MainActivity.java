@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //MENU
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         Log.d("Kliknięto", "x="+item.getItemId());
@@ -166,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // WYKONANIE ODLICZANIA
     public class CounterClass extends CountDownTimer{
         public CounterClass(long millisInFuture, long countDownInterval){
                 super(millisInFuture, countDownInterval);
