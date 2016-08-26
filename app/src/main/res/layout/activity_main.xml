@@ -22,7 +22,8 @@
             android:focusableInTouchMode="true"
             android:textSize="@dimen/text_size"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:screenOrientation="portrait"/>
 
         <Button
             android:layout_width="@dimen/button_width"
