@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,21 +23,21 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
+    private EditText editTextLoop;
+    private EditText editTextTime;
+    private EditText editTextBreak;
     private Button btnStart, btnStop;
     private TextView textViewTime;
-    private EditText editTextTime;
-    private int godziny = 0;
+    private TextView textViewLoop;
+
     private int minuty = 1;
     private int sekundy = 0;
     private int interwal = 1;
+    private int minutyB = 0;
+    private int sekundyB = 0;
+    private int loop = 1;
     private CounterClass timer;
 
-    public int getGodziny() {
-        return godziny;
-    }
-    public void setGodziny(int godziny) {
-        this.godziny = godziny;
-    }
     public int getMinuty() {
         return minuty;
     }
@@ -49,55 +50,130 @@ public class MainActivity extends AppCompatActivity {
     public void setSekundy(int sekundy) {
         this.sekundy = sekundy;
     }
+    public int getMinutyB() {
+        return minutyB;
+    }
+    public void setMinutyB(int minutyB) {
+        this.minutyB = minutyB;
+    }
+    public int getSekundyB() {
+        return sekundyB;
+    }
+    public void setSekundyB(int sekundyB) {
+        this.sekundyB = sekundyB;
+    }
     public int getInterwal() {
         return interwal;
     }
     public void setInterwal(int interwal) {
         this.interwal = interwal;
     }
+    public int getLoop() {
+        return loop;
+    }
+    public void setLoop(int loop) {
+        this.loop = loop;
+    }
+
     //czytanie okna tekstowego i wpisywanie danych na wyjście
-    public void dataReadWrite(EditText editTextTime){
-        String s =  editTextTime.getText().toString();
-        if((s.contains(":")) && ((s.split(":")).length>3)){
+    public void dataReadWrite(EditText et){
+        String s =  et.getText().toString();
+        if((s.contains(":")) && ((s.split(":")).length>2)){
             setSekundy(0);
-            setMinuty(0);
-            setGodziny(0);
-        } else if((s.contains(":")) && ((s.split(":")).length>2)){
-            setSekundy(Integer.valueOf(s.split(":")[2]));
-            setMinuty(Integer.valueOf(s.split(":")[1]));
-            setGodziny(Integer.valueOf(s.split(":")[0]));
+            setMinuty(1);
         }else if(s.contains(":")){
             setSekundy(Integer.valueOf(s.split(":")[1]));
             setMinuty(Integer.valueOf(s.split(":")[0]));
-            setGodziny(0);
 
         }else{
             setSekundy(0);
             setMinuty(Integer.valueOf(s));
-            setGodziny(0);
         }
-        String data = String.format("%02d:%02d:%02d", getGodziny(), getMinuty(), getSekundy());
+        String data = String.format("%01d:%02d", getMinuty(), getSekundy());
         textViewTime.setText(data);
-        editTextTime.setText(data);
-        editTextTime.clearFocus();
+        et.setText(data);
+        et.clearFocus();
         btnStart.setEnabled(true);
         btnStop.setEnabled(true);
     }
-    
+    public void dataRead(EditText et){
+        String s =  et.getText().toString();
+        if((s.contains(":")) && ((s.split(":")).length>2)){
+            setSekundyB(30);
+            setMinutyB(0);
+        }else if(s.contains(":")){
+            setSekundyB(Integer.valueOf(s.split(":")[1]));
+            setMinutyB(Integer.valueOf(s.split(":")[0]));
+
+        }else{
+            setSekundyB(Integer.valueOf(s));
+            setMinutyB(0);
+        }
+        String data = String.format("%01d:%02d", getMinutyB(), getSekundyB());
+        et.setText(data);
+        et.clearFocus();
+        btnStart.setEnabled(true);
+        btnStop.setEnabled(true);
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        editTextLoop = (EditText) findViewById(R.id.editTextLoop);
+        editTextTime = (EditText) findViewById(R.id.editTextTime);
+        editTextTime.setText(String.format("%01d:%02d", getMinuty(), getSekundy()));
+        editTextBreak = (EditText) findViewById(R.id.editTextBreak);
         btnStart = (Button) findViewById(R.id.btnStart);
         btnStop = (Button) findViewById(R.id.btnStop);
         textViewTime = (TextView) findViewById(R.id.textViewTime);
-        editTextTime = (EditText) findViewById(R.id.editTextTime);
-        editTextTime.setText(String.format("%02d:%02d:%02d", getGodziny(), getMinuty(), getSekundy()));
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.alarm_short);
 
 
+        editTextLoop.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    String s1 =  editTextLoop.getText().toString();
+                    setLoop(Integer.valueOf(s1));
+                    String data1 = String.format("%01d", getLoop());
+                    editTextLoop.setText(data1);
+                    editTextLoop.clearFocus();
+                    btnStart.setEnabled(true);
+                    btnStop.setEnabled(true);
+                    handled = false;
+                }
+                return handled;
+            }
+        });
+        editTextLoop.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (v == editTextLoop) {
+                    if(hasFocus){
+                        btnStart.setEnabled(false);
+                        btnStop.setEnabled(false);
+                        editTextLoop.selectAll();
+                    } else if (!hasFocus) {
+                        // Close keyboard
+                        ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                        String s1 =  editTextLoop.getText().toString();
+                        setLoop(Integer.valueOf(s1));
+                        String data1 = String.format("%01d", getLoop());
+                        editTextLoop.setText(data1);
+                        editTextLoop.clearFocus();
+                        btnStart.setEnabled(true);
+                        btnStop.setEnabled(true);
+                    }
+                }
+
+            }
+        });
         editTextTime.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -127,14 +203,45 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        editTextBreak.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    dataRead(editTextBreak); //moja druga metoda
+                    handled = false;
+                }
+                return handled;
+            }
+        });
+        editTextBreak.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (v == editTextBreak) {
+                    if(hasFocus){
+                        btnStart.setEnabled(false);
+                        btnStop.setEnabled(false);
+                        editTextBreak.selectAll();
+                    } else if (!hasFocus) {
+                        // Close keyboard
+                        ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                        dataRead(editTextBreak); //moja druga metoda
+
+                    }
+                }
+
+            }
+        });
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timer = new CounterClass(getGodziny()*60*60*1000+getMinuty()*60*1000+getSekundy()*1000, getInterwal()*1000);
+                timer = new CounterClass(getMinuty()*60*1000+getSekundy()*1000, getInterwal()*1000);
                 timer.start();
                 btnStart.setEnabled(false);
                 editTextTime.setEnabled(false);
-//                mp.start();
+                editTextLoop.setEnabled(false);
+                editTextBreak.setEnabled(false);
+                //textViewLoop.setText(String.valueOf(getLoop()-1));
             }
         });
         btnStop.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +250,8 @@ public class MainActivity extends AppCompatActivity {
                 timer.cancel();
                 btnStart.setEnabled(true);
                 editTextTime.setEnabled(true);
-//                mp.start();
+                editTextLoop.setEnabled(true);
+                editTextBreak.setEnabled(true);
             }
         });
     }
@@ -151,19 +259,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    //MENU
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        Log.d("Kliknięto", "x="+item.getItemId());
-        int id = item.getItemId();
-        if(id==R.id.about){
-            Log.d("klik!", "about");
-        }else if(id==R.id.default_time){
-            Log.d("klik!", "default_time");
-        }
         return true;
     }
 
@@ -176,17 +271,35 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onTick(long millisUntilFinished){
             long millis = millisUntilFinished;
-            String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-                    TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+            String hms = String.format("%01d:%02d", TimeUnit.MILLISECONDS.toMinutes(millis),
                     TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
             textViewTime.setText(hms);
         }
 
         @Override
         public void onFinish(){
-            textViewTime.setText("Done");
             final MediaPlayer mp2 = MediaPlayer.create(getBaseContext(), R.raw.alarm_short);
             mp2.start();
+            setLoop(getLoop()-1);
+            if(getLoop()==0){
+                textViewTime.setText("Done");
+                btnStart.setEnabled(true);
+                editTextTime.setEnabled(true);
+                editTextLoop.setEnabled(true);
+                editTextBreak.setEnabled(true);
+            }
         }
+    }
+    //MENU
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Log.d("Kliknięto", "x="+item.getItemId());
+        int id = item.getItemId();
+        if(id==R.id.about){
+            Toast.makeText(getApplicationContext(), "Autor: JG", Toast.LENGTH_LONG).show();
+        }else if(id==R.id.performance){
+            Toast.makeText(getApplicationContext(), "Wprowadź pętlę, czas główny i czas przerwy", Toast.LENGTH_LONG).show();
+        }
+        return true;
     }
 }

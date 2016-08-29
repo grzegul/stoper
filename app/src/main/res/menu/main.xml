@@ -5,7 +5,7 @@
         android:orderInCategory="100"
         android:title="About" />
     <item
-        android:id="@+id/default_time"
+        android:id="@+id/performance"
         android:orderInCategory="110"
-        android:title="Default time" />
+        android:title="Performance" />
 </menu>
