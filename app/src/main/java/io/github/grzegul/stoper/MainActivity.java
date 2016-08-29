@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
@@ -75,10 +77,21 @@ public class MainActivity extends AppCompatActivity {
         this.loop = loop;
     }
 
+
     //czytanie okna tekstowego i wpisywanie danych na wyjście
     public void dataReadWrite(EditText et){
         String s =  et.getText().toString();
-        if((s.contains(":")) && ((s.split(":")).length>2)){
+        if(s.equals(":") || s.contains("::")){
+            setSekundy(0);
+            setMinuty(1);
+        }else if(s.startsWith(":") && s.length()>1){
+            setSekundy(Integer.valueOf(s.split(":")[1]));
+            setMinuty(0);
+        }
+        else if(s.endsWith(":")){
+            setSekundy(0);
+            setMinuty(Integer.valueOf(s.split(":")[0]));
+        }else if((s.contains(":")) && ((s.split(":")).length>2)) {
             setSekundy(0);
             setMinuty(1);
         }else if(s.contains(":")){
@@ -131,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         btnStart = (Button) findViewById(R.id.btnStart);
         btnStop = (Button) findViewById(R.id.btnStop);
         textViewTime = (TextView) findViewById(R.id.textViewTime);
+        textViewLoop = (TextView) findViewById(R.id.textViewLoop);
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.alarm_short);
 
 
@@ -241,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
                 editTextTime.setEnabled(false);
                 editTextLoop.setEnabled(false);
                 editTextBreak.setEnabled(false);
-                //textViewLoop.setText(String.valueOf(getLoop()-1));
+
             }
         });
         btnStop.setOnClickListener(new View.OnClickListener() {
@@ -275,19 +289,15 @@ public class MainActivity extends AppCompatActivity {
                     TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
             textViewTime.setText(hms);
         }
-
         @Override
         public void onFinish(){
             final MediaPlayer mp2 = MediaPlayer.create(getBaseContext(), R.raw.alarm_short);
             mp2.start();
-            setLoop(getLoop()-1);
-            if(getLoop()==0){
-                textViewTime.setText("Done");
-                btnStart.setEnabled(true);
-                editTextTime.setEnabled(true);
-                editTextLoop.setEnabled(true);
-                editTextBreak.setEnabled(true);
-            }
+            textViewTime.setText("Done");
+            btnStart.setEnabled(true);
+            editTextTime.setEnabled(true);
+            editTextLoop.setEnabled(true);
+            editTextBreak.setEnabled(true);
         }
     }
     //MENU

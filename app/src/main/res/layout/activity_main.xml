@@ -82,6 +82,14 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="30dp"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0"
+        android:id="@+id/textViewLoop"
+        android:layout_alignBottom="@+id/textViewTime"
+        android:layout_alignParentLeft="true" />
 
 
 </RelativeLayout>
