@@ -66,6 +66,7 @@
             android:text="Stop"
             android:textSize="@dimen/text_size"
             android:id="@+id/btnStop"
+            android:enabled="false"
             android:layout_below="@+id/btnStart"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp" />

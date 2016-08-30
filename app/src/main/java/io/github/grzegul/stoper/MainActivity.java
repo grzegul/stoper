@@ -107,11 +107,20 @@ public class MainActivity extends AppCompatActivity {
         et.setText(data);
         et.clearFocus();
         btnStart.setEnabled(true);
-        btnStop.setEnabled(true);
     }
     public void dataRead(EditText et){
         String s =  et.getText().toString();
-        if((s.contains(":")) && ((s.split(":")).length>2)){
+        if(s.equals(":") || s.contains("::")){
+            setSekundyB(0);
+            setMinutyB(1);
+        }else if(s.startsWith(":") && s.length()>1){
+            setSekundyB(Integer.valueOf(s.split(":")[1]));
+            setMinutyB(0);
+        }
+        else if(s.endsWith(":")){
+            setSekundyB(0);
+            setMinutyB(Integer.valueOf(s.split(":")[0]));
+        }else if((s.contains(":")) && ((s.split(":")).length>2)){
             setSekundyB(30);
             setMinutyB(0);
         }else if(s.contains(":")){
@@ -126,16 +135,12 @@ public class MainActivity extends AppCompatActivity {
         et.setText(data);
         et.clearFocus();
         btnStart.setEnabled(true);
-        btnStop.setEnabled(true);
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         editTextLoop = (EditText) findViewById(R.id.editTextLoop);
         editTextTime = (EditText) findViewById(R.id.editTextTime);
@@ -159,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
                     editTextLoop.setText(data1);
                     editTextLoop.clearFocus();
                     btnStart.setEnabled(true);
-                    btnStop.setEnabled(true);
                     handled = false;
                 }
                 return handled;
@@ -171,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
                 if (v == editTextLoop) {
                     if(hasFocus){
                         btnStart.setEnabled(false);
-                        btnStop.setEnabled(false);
                         editTextLoop.selectAll();
                     } else if (!hasFocus) {
                         // Close keyboard
@@ -182,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
                         editTextLoop.setText(data1);
                         editTextLoop.clearFocus();
                         btnStart.setEnabled(true);
-                        btnStop.setEnabled(true);
                     }
                 }
 
@@ -205,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
                 if (v == editTextTime) {
                     if(hasFocus){
                         btnStart.setEnabled(false);
-                        btnStop.setEnabled(false);
                         editTextTime.selectAll();
                     } else if (!hasFocus) {
                         // Close keyboard
@@ -234,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
                 if (v == editTextBreak) {
                     if(hasFocus){
                         btnStart.setEnabled(false);
-                        btnStop.setEnabled(false);
                         editTextBreak.selectAll();
                     } else if (!hasFocus) {
                         // Close keyboard
@@ -252,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
                 timer = new CounterClass(getMinuty()*60*1000+getSekundy()*1000, getInterwal()*1000);
                 timer.start();
                 btnStart.setEnabled(false);
+                btnStop.setEnabled(true);
                 editTextTime.setEnabled(false);
                 editTextLoop.setEnabled(false);
                 editTextBreak.setEnabled(false);
@@ -263,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 timer.cancel();
                 btnStart.setEnabled(true);
+                btnStop.setEnabled(false);
                 editTextTime.setEnabled(true);
                 editTextLoop.setEnabled(true);
                 editTextBreak.setEnabled(true);
