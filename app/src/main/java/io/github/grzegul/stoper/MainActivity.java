@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView textViewTime;
     private TextView textViewLoop;
 
+    boolean flag = false;
+
     private int minuty = 1;
     private int sekundy = 0;
     private int interwal = 1;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private int sekundyB = 0;
     private int loop = 1;
     private CounterClass timer;
+    int counterId = 1;
 
     public int getMinuty() {
         return minuty;
@@ -91,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         else if(s.endsWith(":")){
             setSekundy(0);
             setMinuty(Integer.valueOf(s.split(":")[0]));
-        }else if((s.contains(":")) && ((s.split(":")).length>2)) {
+        }else if(((s.contains(":")) && ((s.split(":")).length>2)) || Integer.valueOf(s)==0) {
             setSekundy(0);
             setMinuty(1);
         }else if(s.contains(":")){
@@ -159,10 +162,15 @@ public class MainActivity extends AppCompatActivity {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String s1 =  editTextLoop.getText().toString();
-                    setLoop(Integer.valueOf(s1));
+                    if(Integer.valueOf(s1)==0){
+                        setLoop(1);
+                    }else{
+                        setLoop(Integer.valueOf(s1));
+                    }
                     String data1 = String.format("%01d", getLoop());
                     editTextLoop.setText(data1);
                     editTextLoop.clearFocus();
+                    textViewLoop.setText(String.valueOf(getLoop()));
                     btnStart.setEnabled(true);
                     handled = false;
                 }
@@ -180,14 +188,18 @@ public class MainActivity extends AppCompatActivity {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                         String s1 =  editTextLoop.getText().toString();
-                        setLoop(Integer.valueOf(s1));
+                        if(Integer.valueOf(s1)==0){
+                            setLoop(1);
+                        }else{
+                            setLoop(Integer.valueOf(s1));
+                        }
                         String data1 = String.format("%01d", getLoop());
                         editTextLoop.setText(data1);
                         editTextLoop.clearFocus();
+                        textViewLoop.setText(String.valueOf(getLoop()));
                         btnStart.setEnabled(true);
                     }
                 }
-
             }
         });
         editTextTime.setOnEditorActionListener(new EditText.OnEditorActionListener() {
@@ -212,10 +224,8 @@ public class MainActivity extends AppCompatActivity {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                         dataReadWrite(editTextTime); //moja metoda
-
                     }
                 }
-
             }
         });
         editTextBreak.setOnEditorActionListener(new EditText.OnEditorActionListener() {
@@ -243,20 +253,19 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }
-
             }
         });
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timer = new CounterClass(getMinuty()*60*1000+getSekundy()*1000, getInterwal()*1000);
-                timer.start();
                 btnStart.setEnabled(false);
                 btnStop.setEnabled(true);
                 editTextTime.setEnabled(false);
                 editTextLoop.setEnabled(false);
                 editTextBreak.setEnabled(false);
-
+                setLoop(Integer.valueOf(editTextLoop.getText().toString()));
+                textViewLoop.setText(String.valueOf(getLoop()-1));
+                startTimer(getLoop());
             }
         });
         btnStop.setOnClickListener(new View.OnClickListener() {
@@ -272,18 +281,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    public void startTimer(int loops){
+        if(loops>0){
+            timer = new CounterClass(getMinuty() * 60 * 1000 + getSekundy() * 1000, getInterwal() * 1000);
+            timer.start();
+        }else{
+            timer.cancel();
+        }
     }
 
     // WYKONANIE ODLICZANIA
     public class CounterClass extends CountDownTimer{
         public CounterClass(long millisInFuture, long countDownInterval){
-                super(millisInFuture, countDownInterval);
+            super(millisInFuture, countDownInterval);
         }
-
         @Override
         public void onTick(long millisUntilFinished){
             long millis = millisUntilFinished;
@@ -293,16 +304,31 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         public void onFinish(){
-            final MediaPlayer mp2 = MediaPlayer.create(getBaseContext(), R.raw.alarm_short);
-            mp2.start();
-            textViewTime.setText("Done");
-            btnStart.setEnabled(true);
-            editTextTime.setEnabled(true);
-            editTextLoop.setEnabled(true);
-            editTextBreak.setEnabled(true);
+            if(getLoop()>1){
+                setLoop(getLoop()-1);
+                textViewLoop.setText(String.valueOf(getLoop()-1));
+                startTimer(getLoop());
+                final MediaPlayer mpShort = MediaPlayer.create(getBaseContext(), R.raw.alarm_short);
+                mpShort.start();
+            }else{
+                textViewTime.setText("Done");
+                btnStart.setEnabled(true);
+                btnStop.setEnabled(false);
+                editTextTime.setEnabled(true);
+                editTextLoop.setEnabled(true);
+                editTextBreak.setEnabled(true);
+                final MediaPlayer mpLong = MediaPlayer.create(getBaseContext(), R.raw.alarm_short); //DODAĆ DŁUGI TON ALARMU KOŃCOWEGO!!!
+                mpLong.start();
+            }
         }
     }
+
     //MENU
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         Log.d("Kliknięto", "x="+item.getItemId());
