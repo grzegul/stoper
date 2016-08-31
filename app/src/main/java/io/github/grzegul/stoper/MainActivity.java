@@ -25,14 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText editTextLoop;
-    private EditText editTextTime;
-    private EditText editTextBreak;
+    private EditText editTextLoop, editTextTime, editTextBreak;
     private Button btnStart, btnStop;
-    private TextView textViewTime;
-    private TextView textViewLoop;
-
-    boolean flag = false;
+    private TextView textViewTime, textViewLoop;
 
     private int minuty = 1;
     private int sekundy = 0;
@@ -41,8 +36,14 @@ public class MainActivity extends AppCompatActivity {
     private int sekundyB = 0;
     private int loop = 1;
     private CounterClass timer;
-    int counterId = 1;
+    private String counterId = "break";
 
+    public String getCounterId() {
+        return counterId;
+    }
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
+    }
     public int getMinuty() {
         return minuty;
     }
@@ -70,9 +71,6 @@ public class MainActivity extends AppCompatActivity {
     public int getInterwal() {
         return interwal;
     }
-    public void setInterwal(int interwal) {
-        this.interwal = interwal;
-    }
     public int getLoop() {
         return loop;
     }
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //czytanie okna tekstowego i wpisywanie danych na wyjście
-    public void dataReadWrite(EditText et){
+    public void obslugaTime(EditText et){
         String s =  et.getText().toString();
         if(s.equals(":") || s.contains("::")){
             setSekundy(0);
@@ -111,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         et.clearFocus();
         btnStart.setEnabled(true);
     }
-    public void dataRead(EditText et){
+    public void obslugaBreak(EditText et){
         String s =  et.getText().toString();
         if(s.equals(":") || s.contains("::")){
             setSekundyB(0);
@@ -146,9 +144,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         editTextLoop = (EditText) findViewById(R.id.editTextLoop);
+        editTextLoop.setText(String.format("%01d", getLoop()));
         editTextTime = (EditText) findViewById(R.id.editTextTime);
         editTextTime.setText(String.format("%01d:%02d", getMinuty(), getSekundy()));
         editTextBreak = (EditText) findViewById(R.id.editTextBreak);
+        editTextBreak.setText(String.format("%01d:%02d", getMinutyB(), getSekundyB()));
         btnStart = (Button) findViewById(R.id.btnStart);
         btnStop = (Button) findViewById(R.id.btnStop);
         textViewTime = (TextView) findViewById(R.id.textViewTime);
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    dataReadWrite(editTextTime); //moja metoda
+                    obslugaTime(editTextTime); //moja metoda
                     handled = false;
                 }
                 return handled;
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
                     } else if (!hasFocus) {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                        dataReadWrite(editTextTime); //moja metoda
+                        obslugaTime(editTextTime); //moja metoda
                     }
                 }
             }
@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    dataRead(editTextBreak); //moja druga metoda
+                    obslugaBreak(editTextBreak); //moja druga metoda
                     handled = false;
                 }
                 return handled;
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                     } else if (!hasFocus) {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                        dataRead(editTextBreak); //moja druga metoda
+                        obslugaBreak(editTextBreak); //moja druga metoda
 
                     }
                 }
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 editTextBreak.setEnabled(false);
                 setLoop(Integer.valueOf(editTextLoop.getText().toString()));
                 textViewLoop.setText(String.valueOf(getLoop()-1));
-                startTimer(getLoop());
+                startTimer("time", getLoop());
             }
         });
         btnStop.setOnClickListener(new View.OnClickListener() {
@@ -281,13 +281,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void startTimer(int loops){
-        if(loops>0){
-            timer = new CounterClass(getMinuty() * 60 * 1000 + getSekundy() * 1000, getInterwal() * 1000);
+    public void startTimer(String counterId, int loops){
+        if(counterId.equals("break")){
+            timer = new CounterClass(getMinutyB() * 60 * 1000 + getSekundyB() * 1000, getInterwal() * 1000);
+            setCounterId("time");
             timer.start();
         }else{
-            timer.cancel();
+            if(loops>0){
+                timer = new CounterClass(getMinuty() * 60 * 1000 + getSekundy() * 1000, getInterwal() * 1000);
+                textViewLoop.setText(String.valueOf(getLoop()-1));
+                setLoop(getLoop()-1);
+                setCounterId("break");
+                timer.start();
+            }else{
+                timer.cancel();
+            }
         }
+
     }
 
     // WYKONANIE ODLICZANIA
@@ -304,10 +314,8 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         public void onFinish(){
-            if(getLoop()>1){
-                setLoop(getLoop()-1);
-                textViewLoop.setText(String.valueOf(getLoop()-1));
-                startTimer(getLoop());
+            if(getLoop()>0){
+                startTimer(getCounterId(), getLoop());
                 final MediaPlayer mpShort = MediaPlayer.create(getBaseContext(), R.raw.alarm_short);
                 mpShort.start();
             }else{
