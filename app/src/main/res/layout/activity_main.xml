@@ -56,7 +56,8 @@
             android:id="@+id/btnStart"
             android:layout_marginTop="30dp"
             android:layout_below="@+id/editTextTime"
-            android:layout_alignStart="@+id/btnStop" />
+            android:layout_alignStart="@+id/btnStop"
+            android:layout_alignLeft="@+id/btnStop"/>
 
         <Button
             android:layout_width="@dimen/button_width"
