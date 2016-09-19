@@ -51,7 +51,7 @@
         <Button
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
-            android:text="Start"
+            android:text="@string/btnStart"
             android:textSize="@dimen/text_size"
             android:id="@+id/btnStart"
             android:layout_marginTop="30dp"
@@ -62,7 +62,7 @@
         <Button
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
-            android:text="Stop"
+            android:text="@string/btnStop"
             android:textSize="@dimen/text_size"
             android:id="@+id/btnStop"
             android:enabled="false"
@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="0:00"
+            android:text="@string/editTextTime"
             android:textSize="50dp"
             android:id="@+id/textViewTime"
             android:focusable="false"
@@ -86,7 +86,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="1"
+        android:text="@string/textViewLoops"
         android:id="@+id/textViewLoop"
         android:layout_alignBottom="@+id/textViewTime"
         android:layout_alignParentLeft="true" />

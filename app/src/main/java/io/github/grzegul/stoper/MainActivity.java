@@ -100,11 +100,6 @@ public class MainActivity extends AppCompatActivity {
             setSekundy(0);
             setMinuty(Integer.valueOf(s));
         }
-        String data = String.format("%01d:%02d", getMinuty(), getSekundy());
-        textViewTime.setText(data);
-        et.setText(data);
-        et.clearFocus();
-        btnStart.setEnabled(true);
     }
     public void obslugaBreak(EditText et){
         String s =  et.getText().toString();
@@ -129,10 +124,6 @@ public class MainActivity extends AppCompatActivity {
             setSekundyB(Integer.valueOf(s));
             setMinutyB(0);
         }
-        String data = String.format("%01d:%02d", getMinutyB(), getSekundyB());
-        et.setText(data);
-        et.clearFocus();
-        btnStart.setEnabled(true);
     }
 
     @Override
@@ -202,12 +193,15 @@ public class MainActivity extends AppCompatActivity {
         editTextTime.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     obslugaTime(editTextTime); //moja metoda
-                    handled = false;
+                    String data = String.format("%01d:%02d", getMinuty(), getSekundy());
+                    textViewTime.setText(data);
+                    editTextTime.setText(data);
+                    editTextTime.clearFocus();
+                    btnStart.setEnabled(true);
                 }
-                return handled;
+                return false;
             }
         });
         editTextTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -221,6 +215,11 @@ public class MainActivity extends AppCompatActivity {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                         obslugaTime(editTextTime); //moja metoda
+                        String data = String.format("%01d:%02d", getMinuty(), getSekundy());
+                        textViewTime.setText(data);
+                        editTextTime.setText(data);
+                        editTextTime.clearFocus();
+                        btnStart.setEnabled(true);
                     }
                 }
             }
@@ -228,12 +227,14 @@ public class MainActivity extends AppCompatActivity {
         editTextBreak.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     obslugaBreak(editTextBreak); //moja druga metoda
-                    handled = false;
+                    String data = String.format("%01d:%02d", getMinutyB(), getSekundyB());
+                    editTextBreak.setText(data);
+                    editTextBreak.clearFocus();
+                    btnStart.setEnabled(true);
                 }
-                return handled;
+                return false;
             }
         });
         editTextBreak.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -247,7 +248,10 @@ public class MainActivity extends AppCompatActivity {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                         obslugaBreak(editTextBreak); //moja druga metoda
-
+                        String data = String.format("%01d:%02d", getMinutyB(), getSekundyB());
+                        editTextBreak.setText(data);
+                        editTextBreak.clearFocus();
+                        btnStart.setEnabled(true);
                     }
                 }
             }
@@ -336,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        Log.d("Kliknięto", "x="+item.getItemId());
+        //Log.d("Kliknięto", "x="+item.getItemId());
         int id = item.getItemId();
         if(id==R.id.about){
             Toast.makeText(getApplicationContext(), "Autor: JG", Toast.LENGTH_LONG).show();

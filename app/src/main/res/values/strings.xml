@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Stoper</string>
+    <string name="timeString">3:00</string>
+    <string name="btnStart">Start</string>
+    <string name="btnStop">Stop</string>
+    <string name="editTextTime">0:00</string>
+    <string name="textViewLoops">1</string>
 </resources>
