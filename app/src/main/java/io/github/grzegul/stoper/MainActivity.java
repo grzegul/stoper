@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStart, btnStop;
     private TextView textViewTime, textViewLoop;
 
-    private int minuty = 1;
+    private int minuty = 0;
     private int sekundy = 0;
     private int interwal = 1;
     private int minutyB = 0;
@@ -77,16 +77,18 @@ public class MainActivity extends AppCompatActivity {
 
 
     //czytanie okna tekstowego i wpisywanie danych na wyjście
-    public void obslugaTime(EditText et){
-        String s =  et.getText().toString();
-        if(s.equals(":") || s.contains("::")){
+    public void obslugaTime(String s){
+        Log.d("time", s);
+        /*if(s.startsWith("0")){
+            setSekundy(Integer.valueOf(s));
+            setMinuty(0);
+        }else if(s.equals(":") || s.contains("::")){
             setSekundy(0);
             setMinuty(1);
         }else if(s.startsWith(":") && s.length()>1){
             setSekundy(Integer.valueOf(s.split(":")[1]));
             setMinuty(0);
-        }
-        else if(s.endsWith(":")){
+        }else if(s.endsWith(":")){
             setSekundy(0);
             setMinuty(Integer.valueOf(s.split(":")[0]));
         }else if(((s.contains(":")) && ((s.split(":")).length>2)) || Integer.valueOf(s)==0) {
@@ -99,10 +101,34 @@ public class MainActivity extends AppCompatActivity {
         }else{
             setSekundy(0);
             setMinuty(Integer.valueOf(s));
+        }*/
+        if(s.equals(":") || s.contains("::")){
+            setSekundy(0);
+            setMinuty(1);
+        }else if(s.startsWith("0")){
+            setSekundy(Integer.valueOf(s.split(":")[1]));
+            setMinuty(0);
+        }else if(s.startsWith(":") && s.length()>1){
+            setSekundy(Integer.valueOf(s.split(":")[1]));
+            setMinuty(0);
+        }
+        else if(s.endsWith(":")){
+            setSekundy(0);
+            setMinuty(Integer.valueOf(s.split(":")[0]));
+        }else if((s.contains(":")) && ((s.split(":")).length>2)){
+            setSekundy(30);
+            setMinuty(0);
+        }else if(s.contains(":")){
+            setSekundy(Integer.valueOf(s.split(":")[1]));
+            setMinuty(Integer.valueOf(s.split(":")[0]));
+
+        }else{
+            setSekundy(Integer.valueOf(s));
+            setMinuty(0);
         }
     }
-    public void obslugaBreak(EditText et){
-        String s =  et.getText().toString();
+    public void obslugaBreak(String s){
+        Log.d("break", s);
         if(s.equals(":") || s.contains("::")){
             setSekundyB(0);
             setMinutyB(1);
@@ -141,16 +167,14 @@ public class MainActivity extends AppCompatActivity {
         btnStop = (Button) findViewById(R.id.btnStop);
         textViewTime = (TextView) findViewById(R.id.textViewTime);
         textViewLoop = (TextView) findViewById(R.id.textViewLoop);
-        //final MediaPlayer mp = MediaPlayer.create(this, R.raw.alarm_short);
 
 
         editTextLoop.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String s1 =  editTextLoop.getText().toString();
-                    if(Integer.valueOf(s1)==0){
+                    if((Integer.valueOf(s1)<1)||(Integer.valueOf(s1)>99)){
                         setLoop(1);
                     }else{
                         setLoop(Integer.valueOf(s1));
@@ -160,9 +184,8 @@ public class MainActivity extends AppCompatActivity {
                     editTextLoop.clearFocus();
                     textViewLoop.setText(String.valueOf(getLoop()));
                     btnStart.setEnabled(true);
-                    handled = false;
                 }
-                return handled;
+                return false;
             }
         });
         editTextLoop.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -176,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                         String s1 =  editTextLoop.getText().toString();
-                        if(Integer.valueOf(s1)==0){
+                        if((Integer.valueOf(s1)<1)||(Integer.valueOf(s1)>99)){
                             setLoop(1);
                         }else{
                             setLoop(Integer.valueOf(s1));
@@ -194,7 +217,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    obslugaTime(editTextTime); //moja metoda
+                    String s =  editTextTime.getText().toString();
+                    obslugaTime(s); //moja metoda
                     String data = String.format("%01d:%02d", getMinuty(), getSekundy());
                     textViewTime.setText(data);
                     editTextTime.setText(data);
@@ -214,7 +238,8 @@ public class MainActivity extends AppCompatActivity {
                     } else if (!hasFocus) {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                        obslugaTime(editTextTime); //moja metoda
+                        String s =  editTextTime.getText().toString();
+                        obslugaTime(s); //moja metoda
                         String data = String.format("%01d:%02d", getMinuty(), getSekundy());
                         textViewTime.setText(data);
                         editTextTime.setText(data);
@@ -228,7 +253,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    obslugaBreak(editTextBreak); //moja druga metoda
+                    String s =  editTextBreak.getText().toString();
+                    obslugaBreak(s); //moja druga metoda
                     String data = String.format("%01d:%02d", getMinutyB(), getSekundyB());
                     editTextBreak.setText(data);
                     editTextBreak.clearFocus();
@@ -247,7 +273,8 @@ public class MainActivity extends AppCompatActivity {
                     } else if (!hasFocus) {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                        obslugaBreak(editTextBreak); //moja druga metoda
+                        String s =  editTextBreak.getText().toString();
+                        obslugaBreak(s); //moja druga metoda
                         String data = String.format("%01d:%02d", getMinutyB(), getSekundyB());
                         editTextBreak.setText(data);
                         editTextBreak.clearFocus();
@@ -286,6 +313,7 @@ public class MainActivity extends AppCompatActivity {
         if(counterId.equals("break")){
             timer = new CounterClass(getMinutyB() * 60 * 1000 + getSekundyB() * 1000, getInterwal() * 1000);
             setCounterId("time");
+            textViewTime.setBackgroundResource(R.color.colorBreak);
             timer.start();
         }else{
             if(loops>0){
@@ -293,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
                 textViewLoop.setText(String.valueOf(getLoop()-1));
                 setLoop(getLoop()-1);
                 setCounterId("break");
+                textViewTime.setBackgroundResource(R.color.colorTime);
                 timer.start();
             }else{
                 timer.cancel();
@@ -321,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
                 mpShort.start();
             }else{
                 textViewTime.setText("Done");
+                textViewTime.setBackgroundResource(R.color.colorWhite);
                 btnStart.setEnabled(true);
                 btnStop.setEnabled(false);
                 editTextTime.setEnabled(true);
