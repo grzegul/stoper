@@ -77,35 +77,32 @@ public class MainActivity extends AppCompatActivity {
 
 
     //czytanie okna tekstowego i wpisywanie danych na wyjście
-    public void obslugaTime(String s){
+    public String obslugaTime(String s){
         if(s.equals("") || s.equals(":") || s.contains("::") || ((s.split(":")).length>2)){
             setSekundy(0);
-            setMinuty(1);
+            setMinuty(0);
         }else if(s.startsWith(":") && s.length()>1){
             setSekundy(Integer.valueOf(s.split(":")[1]));
             setMinuty(0);
         }else if(s.endsWith(":")){
             setSekundy(0);
             setMinuty(Integer.valueOf(s.split(":")[0]));
-        }/*else if(((s.contains(":")) && ((s.split(":")).length>2))) {
-            setSekundy(0);
-            setMinuty(1);
-        }*/else if(s.contains(":")){
+        }else if(s.contains(":")){
             setSekundy(Integer.valueOf(s.split(":")[1]));
             setMinuty(Integer.valueOf(s.split(":")[0]));
-
-        }else if(s.startsWith("0")){
+        }else if(s.startsWith("0")){    //taki cheat na starsze androidy, gdzie klawiatura nie ma ":"
             setSekundy(Integer.valueOf(s));
             setMinuty(0);
         }else{
             setSekundy(0);
             setMinuty(Integer.valueOf(s));
         }
+        return getMinuty()+":"+getSekundy();
     }
     public void obslugaBreak(String s){
         if(s.equals("") || s.equals(":") || s.contains("::")){
             setSekundyB(0);
-            setMinutyB(1);
+            setMinutyB(0);
         }else if(s.startsWith(":") && s.length()>1){
             setSekundyB(Integer.valueOf(s.split(":")[1]));
             setMinutyB(0);

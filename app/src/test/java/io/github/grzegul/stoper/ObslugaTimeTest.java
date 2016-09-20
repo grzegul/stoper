@@ -10,19 +10,17 @@ import static org.junit.Assert.*;
  * Created by jgrzegulski on 2016-09-08.
  */
 public class ObslugaTimeTest {
-    MainActivity ma;
+    MainActivity ma = new MainActivity();
     private String expected;
+    private String s;
 
-    @Before
-    public void  setUp(){
-
-        expected =  "0:30";
-        ma = new MainActivity();
-    }
 
     @Test
-    public void obslugaTime_pelnyFormatCzasowy(){
-        ma.setSekundy(30);
+    public void obslugaTime_checkIfDataIsCorrect_fullTimeFormat(){
+        expected =  "21:15";
+        s = "21:15";
+        ma.obslugaTime(s);
         assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
     }
+
 }
