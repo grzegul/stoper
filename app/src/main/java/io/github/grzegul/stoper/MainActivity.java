@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         btnStop = (Button) findViewById(R.id.btnStop);
         textViewTime = (TextView) findViewById(R.id.textViewTime);
         textViewLoop = (TextView) findViewById(R.id.textViewLoop);
-        final MediaPlayer mp = MediaPlayer.create(this, R.raw.alarm_short);
+        //final MediaPlayer mp = MediaPlayer.create(this, R.raw.alarm_short);
 
 
         editTextLoop.setOnEditorActionListener(new EditText.OnEditorActionListener() {
@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                 editTextTime.setEnabled(true);
                 editTextLoop.setEnabled(true);
                 editTextBreak.setEnabled(true);
-                final MediaPlayer mpLong = MediaPlayer.create(getBaseContext(), R.raw.alarm_short); //DODAĆ DŁUGI TON ALARMU KOŃCOWEGO!!!
+                final MediaPlayer mpLong = MediaPlayer.create(getBaseContext(), R.raw.alarm_long);
                 mpLong.start();
             }
         }
