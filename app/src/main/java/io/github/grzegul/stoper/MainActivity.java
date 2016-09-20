@@ -78,11 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     //czytanie okna tekstowego i wpisywanie danych na wyjście
     public void obslugaTime(String s){
-        Log.d("time", s);
-        /*if(s.startsWith("0")){
-            setSekundy(Integer.valueOf(s));
-            setMinuty(0);
-        }else if(s.equals(":") || s.contains("::")){
+        if(s.equals("") || s.equals(":") || s.contains("::") || ((s.split(":")).length>2)){
             setSekundy(0);
             setMinuty(1);
         }else if(s.startsWith(":") && s.length()>1){
@@ -91,45 +87,23 @@ public class MainActivity extends AppCompatActivity {
         }else if(s.endsWith(":")){
             setSekundy(0);
             setMinuty(Integer.valueOf(s.split(":")[0]));
-        }else if(((s.contains(":")) && ((s.split(":")).length>2)) || Integer.valueOf(s)==0) {
+        }/*else if(((s.contains(":")) && ((s.split(":")).length>2))) {
             setSekundy(0);
             setMinuty(1);
-        }else if(s.contains(":")){
+        }*/else if(s.contains(":")){
             setSekundy(Integer.valueOf(s.split(":")[1]));
             setMinuty(Integer.valueOf(s.split(":")[0]));
 
+        }else if(s.startsWith("0")){
+            setSekundy(Integer.valueOf(s));
+            setMinuty(0);
         }else{
             setSekundy(0);
             setMinuty(Integer.valueOf(s));
-        }*/
-        if(s.equals(":") || s.contains("::")){
-            setSekundy(0);
-            setMinuty(1);
-        }else if(s.startsWith("0")){
-            setSekundy(Integer.valueOf(s.split(":")[1]));
-            setMinuty(0);
-        }else if(s.startsWith(":") && s.length()>1){
-            setSekundy(Integer.valueOf(s.split(":")[1]));
-            setMinuty(0);
-        }
-        else if(s.endsWith(":")){
-            setSekundy(0);
-            setMinuty(Integer.valueOf(s.split(":")[0]));
-        }else if((s.contains(":")) && ((s.split(":")).length>2)){
-            setSekundy(30);
-            setMinuty(0);
-        }else if(s.contains(":")){
-            setSekundy(Integer.valueOf(s.split(":")[1]));
-            setMinuty(Integer.valueOf(s.split(":")[0]));
-
-        }else{
-            setSekundy(Integer.valueOf(s));
-            setMinuty(0);
         }
     }
     public void obslugaBreak(String s){
-        Log.d("break", s);
-        if(s.equals(":") || s.contains("::")){
+        if(s.equals("") || s.equals(":") || s.contains("::")){
             setSekundyB(0);
             setMinutyB(1);
         }else if(s.startsWith(":") && s.length()>1){
@@ -217,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    String s =  editTextTime.getText().toString();
+                    String s = editTextTime.getText().toString();
                     obslugaTime(s); //moja metoda
                     String data = String.format("%01d:%02d", getMinuty(), getSekundy());
                     textViewTime.setText(data);
@@ -253,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    String s =  editTextBreak.getText().toString();
+                    String s = editTextBreak.getText().toString();
                     obslugaBreak(s); //moja druga metoda
                     String data = String.format("%01d:%02d", getMinutyB(), getSekundyB());
                     editTextBreak.setText(data);
@@ -370,7 +344,6 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        //Log.d("Kliknięto", "x="+item.getItemId());
         int id = item.getItemId();
         if(id==R.id.about){
             Toast.makeText(getApplicationContext(), "Autor: JG", Toast.LENGTH_LONG).show();
