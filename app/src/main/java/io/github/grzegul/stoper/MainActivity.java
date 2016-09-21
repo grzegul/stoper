@@ -78,7 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
     //czytanie okna tekstowego i wpisywanie danych na wyjście
     public String obslugaTime(String s){
-        if(s.equals("") || s.equals(":") || s.contains("::") || ((s.split(":")).length>2)){
+        if(s.equals("") || s.equals(":")
+                        || s.contains("::")
+                        || ((s.split(":")).length>2)
+                        || (s.endsWith(":")&&((s.split(":")).length>1))
+                        || (s.length()>5)){
             setSekundy(0);
             setMinuty(0);
         }else if(s.startsWith(":") && s.length()>1){

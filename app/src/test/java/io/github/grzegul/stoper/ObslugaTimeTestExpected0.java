@@ -18,62 +18,54 @@ public class ObslugaTimeTestExpected0 {
     public void obslugaTime_checkIfDataIsCorrect_empty(){
         s = "";
         ma.obslugaTime(s);
-        assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
+        assertEquals(expected, ma.obslugaTime(s));
     }
     @Test
     public void obslugaTime_checkIfDataIsCorrect_1Colon(){
         s = ":";
         ma.obslugaTime(s);
-        assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
+        assertEquals(expected, ma.obslugaTime(s));
     }
     @Test
     public void obslugaTime_checkIfDataIsCorrect_2Colon(){
         s = "::";
         ma.obslugaTime(s);
-        assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
+        assertEquals(expected, ma.obslugaTime(s));
     }
     @Test
     public void obslugaTime_checkIfDataIsCorrect_3Colon(){
         s = ":::";
         ma.obslugaTime(s);
-        assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
+        assertEquals(expected, ma.obslugaTime(s));
     }
     @Test
     public void obslugaTime_checkIfDataIsCorrect_4Colon(){
         s = "::::";
         ma.obslugaTime(s);
-        assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
-    }
-    @Test
-    public void obslugaTime_checkIfDataIsCorrect_10Colon(){
-        s = "::::::::::";
-        ma.obslugaTime(s);
-        assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
+        assertEquals(expected, ma.obslugaTime(s));
     }
     @Test
     public void obslugaTime_checkIfDataIsCorrect_intColonIntColonInt(){
         s = "3:3:3";
         ma.obslugaTime(s);
-        assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
+        assertEquals(expected, ma.obslugaTime(s));
     }
     @Test
     public void obslugaTime_checkIfDataIsCorrect_ColonIntColonInt(){
         s = ":3:3";
         ma.obslugaTime(s);
-        assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
+        assertEquals(expected, ma.obslugaTime(s));
     }
-    @Ignore
     @Test
     public void obslugaTime_checkIfDataIsCorrect_intColonIntColon(){
         s = "2:3:";
         ma.obslugaTime(s);
-        assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
+        assertEquals(expected, ma.obslugaTime(s));
     }
-    @Ignore
     @Test
     public void obslugaTime_checkIfDataIsCorrect_largeNumbers(){
         s = "999999999999999999999999999999999999999999999999999999999999999999999999999999999";
         ma.obslugaTime(s);
-        assertEquals(expected, ma.getMinuty()+":"+ma.getSekundy());
+        assertEquals(expected, ma.obslugaTime(s));
     }
 }
