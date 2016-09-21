@@ -78,11 +78,12 @@ public class MainActivity extends AppCompatActivity {
 
     //czytanie okna tekstowego i wpisywanie danych na wyjście
     public String obslugaTime(String s){
-        if(s.equals("") || s.equals(":")
-                        || s.contains("::")
-                        || ((s.split(":")).length>2)
-                        || (s.endsWith(":")&&((s.split(":")).length>1))
-                        || (s.length()>5)){
+        if((s.length()>5)
+                || s.equals("")
+                || s.equals(":")
+                || s.contains("::")
+                || ((s.split(":")).length>2)
+                || (s.endsWith(":")&&((s.split(":")).length>1))){
             setSekundy(0);
             setMinuty(0);
         }else if(s.startsWith(":") && s.length()>1){
@@ -104,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
         return getMinuty()+":"+getSekundy();
     }
     public String obslugaBreak(String s){
-        if(s.equals("") || s.equals(":")
+        if((s.length()>5)
+                || s.equals("") || s.equals(":")
                 || s.contains("::")
                 || ((s.split(":")).length>2)
-                || (s.endsWith(":")&&((s.split(":")).length>1))
-                || (s.length()>5)){
+                || (s.endsWith(":")&&((s.split(":")).length>1))){
             setSekundyB(0);
             setMinutyB(0);
         }else if(s.startsWith(":") && s.length()>1){
@@ -130,6 +131,14 @@ public class MainActivity extends AppCompatActivity {
             setMinutyB(0);
         }
         return getMinutyB()+":"+getSekundyB();
+    }
+    public int obslugaLoop(String s){
+        if((s.length()>2) || (Integer.valueOf(s)<1) || (Integer.valueOf(s)>99)){
+            setLoop(1);
+        }else{
+            setLoop(Integer.valueOf(s));
+        }
+        return getLoop();
     }
 
     @Override
@@ -154,11 +163,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String s1 =  editTextLoop.getText().toString();
-                    if((Integer.valueOf(s1)<1)||(Integer.valueOf(s1)>99)){
-                        setLoop(1);
-                    }else{
-                        setLoop(Integer.valueOf(s1));
-                    }
+                    obslugaLoop(s1);
                     String data1 = String.format("%01d", getLoop());
                     editTextLoop.setText(data1);
                     editTextLoop.clearFocus();
@@ -179,11 +184,7 @@ public class MainActivity extends AppCompatActivity {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                         String s1 =  editTextLoop.getText().toString();
-                        if((Integer.valueOf(s1)<1)||(Integer.valueOf(s1)>99)){
-                            setLoop(1);
-                        }else{
-                            setLoop(Integer.valueOf(s1));
-                        }
+                        obslugaLoop(s1);
                         String data1 = String.format("%01d", getLoop());
                         editTextLoop.setText(data1);
                         editTextLoop.clearFocus();
