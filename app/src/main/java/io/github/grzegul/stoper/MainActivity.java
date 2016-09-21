@@ -103,8 +103,12 @@ public class MainActivity extends AppCompatActivity {
         }
         return getMinuty()+":"+getSekundy();
     }
-    public void obslugaBreak(String s){
-        if(s.equals("") || s.equals(":") || s.contains("::")){
+    public String obslugaBreak(String s){
+        if(s.equals("") || s.equals(":")
+                || s.contains("::")
+                || ((s.split(":")).length>2)
+                || (s.endsWith(":")&&((s.split(":")).length>1))
+                || (s.length()>5)){
             setSekundyB(0);
             setMinutyB(0);
         }else if(s.startsWith(":") && s.length()>1){
@@ -125,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             setSekundyB(Integer.valueOf(s));
             setMinutyB(0);
         }
+        return getMinutyB()+":"+getSekundyB();
     }
 
     @Override

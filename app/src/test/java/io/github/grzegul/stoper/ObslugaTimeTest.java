@@ -16,35 +16,30 @@ public class ObslugaTimeTest {
     public void obslugaTime_checkIfDataIsCorrect_fullTimeFormat(){
         expected =  "21:15";
         s = "21:15";
-        ma.obslugaTime(s);
         assertEquals(expected, ma.obslugaTime(s));
     }
     @Test
     public void obslugaTime_checkIfDataIsCorrect_colonInt(){
         expected =  "0:15";
         s = ":15";
-        ma.obslugaTime(s);
         assertEquals(expected, ma.obslugaTime(s));
     }
     @Test
     public void obslugaTime_checkIfDataIsCorrect_intColon(){
         expected =  "2:0";
         s = "2:";
-        ma.obslugaTime(s);
         assertEquals(expected, ma.obslugaTime(s));
     }
     @Test
     public void obslugaTime_checkIfDataIsCorrect_zeroZeroColonZeroZero(){
         expected =  "0:0";
         s = "00:00";
-        ma.obslugaTime(s);
         assertEquals(expected, ma.obslugaTime(s));
     }
     @Test
     public void obslugaTime_checkIfDataIsCorrect_zeroIntColonZeroInt(){
         expected =  "2:1";
         s = "02:01";
-        ma.obslugaTime(s);
         assertEquals(expected, ma.obslugaTime(s));
     }
 
