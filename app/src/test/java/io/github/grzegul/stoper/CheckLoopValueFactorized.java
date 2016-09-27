@@ -13,12 +13,12 @@ import static org.junit.Assert.assertEquals;
  * Created by jgrzegulski on 2016-09-08.
  */
 @RunWith(Parameterized.class)
-public class ObslugaLoopTestAllFactorized {
+public class CheckLoopValueFactorized {
     MainActivity ma = new MainActivity();
     private int expected;
     private String actual;
 
-    public ObslugaLoopTestAllFactorized(int expected, String actual) {
+    public CheckLoopValueFactorized(int expected, String actual) {
         this.expected = expected;
         this.actual = actual;
     }
@@ -29,14 +29,13 @@ public class ObslugaLoopTestAllFactorized {
                 {3, "3"},
                 {1, "100"},
                 {1, "999999999999999999999999999999999999999999999999999999999999999999999999999999999"}};
-
         return Arrays.asList(expectedOutputs);
     }
 
 
     @Test
     public void obslugaTime_checkIfDataIsCorrect_acceptedData(){
-        assertEquals(expected, ma.obslugaLoop(actual));
+        assertEquals(expected, ma.chceckLoopValue(actual));
     }
 
 }

@@ -13,12 +13,12 @@ import static org.junit.Assert.assertEquals;
  * Created by jgrzegulski on 2016-09-08.
  */
 @RunWith(Parameterized.class)
-public class ObslugaTimeTestAllFactorized {
+public class CheckBreakValueFactorized {
     MainActivity ma = new MainActivity();
     private String expected;
     private String actual;
 
-    public ObslugaTimeTestAllFactorized(String expected, String actual) {
+    public CheckBreakValueFactorized(String expected, String actual) {
         this.expected = expected;
         this.actual = actual;
     }
@@ -32,7 +32,7 @@ public class ObslugaTimeTestAllFactorized {
                 {"0:0", "00:00"},
                 {"2:1", "02:01"},
                 {"0:5", "05"},
-                {"5:0", "5"},
+                {"0:5", "5"},
                 {"0:0", ""},
                 {"0:0", ":"},
                 {"0:0", "::"},
@@ -49,7 +49,7 @@ public class ObslugaTimeTestAllFactorized {
 
     @Test
     public void obslugaTime_checkIfDataIsCorrect_acceptedData(){
-        assertEquals(expected, ma.obslugaTime(actual));
+        assertEquals(expected, ma.checkBreakValue(actual));
     }
 
 }

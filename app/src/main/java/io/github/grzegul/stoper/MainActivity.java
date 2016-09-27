@@ -5,7 +5,6 @@ import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int minuty = 0;
     private int sekundy = 0;
-    private int interwal = 1;
+    private static final int INTERWAL = 1;
     private int minutyB = 0;
     private int sekundyB = 0;
     private int loop = 1;
@@ -65,9 +64,6 @@ public class MainActivity extends AppCompatActivity {
     public void setSekundyB(int sekundyB) {
         this.sekundyB = sekundyB;
     }
-    public int getInterwal() {
-        return interwal;
-    }
     public int getLoop() {
         return loop;
     }
@@ -76,70 +72,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //czytanie okna tekstowego i wpisywanie danych na wyjście
-    public String obslugaTime(String s){
-        if((s.length()>5)
-                || s.equals("")
-                || s.equals(":")
-                || s.contains("::")
-                || ((s.split(":")).length>2)
-                || (s.endsWith(":")&&((s.split(":")).length>1))){
-            setSekundy(0);
-            setMinuty(0);
-        }else if(s.startsWith(":") && s.length()>1){
-            setSekundy(Integer.valueOf(s.split(":")[1]));
-            setMinuty(0);
-        }else if(s.endsWith(":")){
-            setSekundy(0);
-            setMinuty(Integer.valueOf(s.split(":")[0]));
-        }else if(s.contains(":")){
-            setSekundy(Integer.valueOf(s.split(":")[1]));
-            setMinuty(Integer.valueOf(s.split(":")[0]));
-        }else if(s.startsWith("0")){    //taki cheat na starsze androidy, gdzie klawiatura nie ma ":"
-            setSekundy(Integer.valueOf(s));
-            setMinuty(0);
-        }else{
-            setSekundy(0);
-            setMinuty(Integer.valueOf(s));
-        }
-        return getMinuty()+":"+getSekundy();
-    }
-    public String obslugaBreak(String s){
-        if((s.length()>5)
-                || s.equals("") || s.equals(":")
-                || s.contains("::")
-                || ((s.split(":")).length>2)
-                || (s.endsWith(":")&&((s.split(":")).length>1))){
-            setSekundyB(0);
-            setMinutyB(0);
-        }else if(s.startsWith(":") && s.length()>1){
-            setSekundyB(Integer.valueOf(s.split(":")[1]));
-            setMinutyB(0);
-        }
-        else if(s.endsWith(":")){
-            setSekundyB(0);
-            setMinutyB(Integer.valueOf(s.split(":")[0]));
-        }else if((s.contains(":")) && ((s.split(":")).length>2)){
-            setSekundyB(30);
-            setMinutyB(0);
-        }else if(s.contains(":")){
-            setSekundyB(Integer.valueOf(s.split(":")[1]));
-            setMinutyB(Integer.valueOf(s.split(":")[0]));
 
-        }else{
-            setSekundyB(Integer.valueOf(s));
-            setMinutyB(0);
-        }
-        return getMinutyB()+":"+getSekundyB();
-    }
-    public int obslugaLoop(String s){
-        if((s.length()>2) || (Integer.valueOf(s)<1) || (Integer.valueOf(s)>99)){
-            setLoop(1);
-        }else{
-            setLoop(Integer.valueOf(s));
-        }
-        return getLoop();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String s1 =  editTextLoop.getText().toString();
-                    obslugaLoop(s1);
+                    chceckLoopValue(s1);
                     String data1 = String.format("%01d", getLoop());
                     editTextLoop.setText(data1);
                     editTextLoop.clearFocus();
@@ -184,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                         String s1 =  editTextLoop.getText().toString();
-                        obslugaLoop(s1);
+                        chceckLoopValue(s1);
                         String data1 = String.format("%01d", getLoop());
                         editTextLoop.setText(data1);
                         editTextLoop.clearFocus();
@@ -199,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String s = editTextTime.getText().toString();
-                    obslugaTime(s); //moja metoda
+                    checkTimeValue(s); //moja metoda
                     String data = String.format("%01d:%02d", getMinuty(), getSekundy());
                     textViewTime.setText(data);
                     editTextTime.setText(data);
@@ -220,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                         String s =  editTextTime.getText().toString();
-                        obslugaTime(s); //moja metoda
+                        checkTimeValue(s); //moja metoda
                         String data = String.format("%01d:%02d", getMinuty(), getSekundy());
                         textViewTime.setText(data);
                         editTextTime.setText(data);
@@ -235,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String s = editTextBreak.getText().toString();
-                    obslugaBreak(s); //moja druga metoda
+                    checkBreakValue(s); //moja druga metoda
                     String data = String.format("%01d:%02d", getMinutyB(), getSekundyB());
                     editTextBreak.setText(data);
                     editTextBreak.clearFocus();
@@ -255,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                         // Close keyboard
                         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                         String s =  editTextBreak.getText().toString();
-                        obslugaBreak(s); //moja druga metoda
+                        checkBreakValue(s); //moja druga metoda
                         String data = String.format("%01d:%02d", getMinutyB(), getSekundyB());
                         editTextBreak.setText(data);
                         editTextBreak.clearFocus();
@@ -289,16 +222,82 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    //sprawdzanie wprowadzonych danych
+    public String checkTimeValue(String input){
+        if(wrongTimeInput(input) == true){
+            setSekundy(0);
+            setMinuty(0);
+        }else if(input.startsWith(":") && input.length()>1){
+            setSekundy(Integer.valueOf(input.split(":")[1]));
+            setMinuty(0);
+        }else if(input.endsWith(":")){
+            setSekundy(0);
+            setMinuty(Integer.valueOf(input.split(":")[0]));
+        }else if(input.contains(":")){
+            setSekundy(Integer.valueOf(input.split(":")[1]));
+            setMinuty(Integer.valueOf(input.split(":")[0]));
+        }else if(input.startsWith("0")){    //taki cheat na starsze androidy, gdzie klawiatura nie ma ":"
+            setSekundy(Integer.valueOf(input));
+            setMinuty(0);
+        }else{
+            setSekundy(0);
+            setMinuty(Integer.valueOf(input));
+        }
+        return getMinuty()+":"+getSekundy();
+    }
+    public String checkBreakValue(String input){
+        if(wrongTimeInput(input) == true){
+            setSekundyB(0);
+            setMinutyB(0);
+        }else if(input.startsWith(":") && input.length()>1){
+            setSekundyB(Integer.valueOf(input.split(":")[1]));
+            setMinutyB(0);
+        }
+        else if(input.endsWith(":")){
+            setSekundyB(0);
+            setMinutyB(Integer.valueOf(input.split(":")[0]));
+        }else if((input.contains(":")) && ((input.split(":")).length>2)){
+            setSekundyB(30);
+            setMinutyB(0);
+        }else if(input.contains(":")){
+            setSekundyB(Integer.valueOf(input.split(":")[1]));
+            setMinutyB(Integer.valueOf(input.split(":")[0]));
+
+        }else{
+            setSekundyB(Integer.valueOf(input));
+            setMinutyB(0);
+        }
+        return getMinutyB()+":"+getSekundyB();
+    }
+    private boolean wrongTimeInput(String input){
+        if ((input.length()>5)
+                || input.equals("")
+                || input.equals(":")
+                || input.contains("::")
+                || ((input.split(":")).length>2)
+                || (input.endsWith(":")&&((input.split(":")).length>1))){
+            return true;
+        }
+        return false;
+    }
+    public int chceckLoopValue(String s){
+        if((s.length()>2) || (Integer.valueOf(s)<1) || (Integer.valueOf(s)>99)){
+            setLoop(1);
+        }else{
+            setLoop(Integer.valueOf(s));
+        }
+        return getLoop();
+    }
 
     public void startTimer(String counterId, int loops){
         if(counterId.equals("break")){
-            timer = new CounterClass(getMinutyB() * 60 * 1000 + getSekundyB() * 1000, getInterwal() * 1000);
+            timer = new CounterClass(getMinutyB() * 60 * 1000 + getSekundyB() * 1000, INTERWAL * 1000);
             setCounterId("time");
             textViewTime.setBackgroundResource(R.color.colorBreak);
             timer.start();
         }else{
             if(loops>0){
-                timer = new CounterClass(getMinuty() * 60 * 1000 + getSekundy() * 1000, getInterwal() * 1000);
+                timer = new CounterClass(getMinuty() * 60 * 1000 + getSekundy() * 1000, INTERWAL * 1000);
                 textViewLoop.setText(String.valueOf(getLoop()-1));
                 setLoop(getLoop()-1);
                 setCounterId("break");
@@ -317,8 +316,7 @@ public class MainActivity extends AppCompatActivity {
             super(millisInFuture, countDownInterval);
         }
         @Override
-        public void onTick(long millisUntilFinished){
-            long millis = millisUntilFinished;
+        public void onTick(long millis){
             String hms = String.format("%01d:%02d", TimeUnit.MILLISECONDS.toMinutes(millis),
                     TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
             textViewTime.setText(hms);
