@@ -1,0 +1,6 @@
+# stoper
+# Jakub Grzegulski
+# Aplikacja na potrzeby treningu interwałowego z możliwością ustawiania długości trwania serii i przerw.
+#
+# TODO: zamienić własny sposób wyliczania czasu na gotową bibliotekę.
+# Poprawić interface, być może tutaj również skorzystać z gotowca.
